@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 命理分析 - AI Fortune</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="dark-theme">
+    <div id="app">
+        <!-- Input Section -->
+        <section id="input-section" class="active">
+            <header class="main-header">
+                <button class="icon-btn"><i class="fas fa-chevron-left"></i></button>
+                <h1>AI 命理分析</h1>
+                <button class="icon-btn help-btn">?</button>
+            </header>
+
+            <div class="banner-card">
+                <div class="banner-content">
+                    <span class="banner-label">EMPOWERED BY AI</span>
+                    <h2 class="banner-title">解鎖命運之鑰</h2>
+                </div>
+                <div class="banner-cloud"></div>
+            </div>
+
+            <form id="fortune-form" class="main-form">
+                <!-- Date of Birth -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-calendar-alt gold-icon"></i>
+                        <span>出生日期</span>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-col">
+                            <label>年份</label>
+                            <input type="number" id="birth-year" placeholder="1995" required>
+                        </div>
+                        <div class="input-col">
+                            <label>月份</label>
+                            <div class="select-wrapper">
+                                <select id="birth-month" required>
+                                    <option value="1">一月</option>
+                                    <option value="2">二月</option>
+                                    <option value="3">三月</option>
+                                    <option value="4">四月</option>
+                                    <option value="5">五月</option>
+                                    <option value="6">六月</option>
+                                    <option value="7">七月</option>
+                                    <option value="8">八月</option>
+                                    <option value="9">九月</option>
+                                    <option value="10">十月</option>
+                                    <option value="11">十一月</option>
+                                    <option value="12">十二月</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-col">
+                            <label>日期</label>
+                            <input type="number" id="birth-day" placeholder="01" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Time of Birth -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-clock gold-icon"></i>
+                        <span>出生時間</span>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-col">
+                            <label>小時</label>
+                            <input type="number" id="birth-hour" placeholder="14" max="23">
+                        </div>
+                        <div class="input-col">
+                            <label>分鐘</label>
+                            <input type="number" id="birth-minute" placeholder="30" max="59">
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="unknown-time">
+                            <label for="unknown-time">
+                                <span class="checkbox-circle"></span>
+                                不知道精確時間
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MBTI Section -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-user-gear gold-icon"></i>
+                        <span>MBTI 性格類型</span>
+                    </div>
+                    <div class="mbti-grid" id="mbti-grid">
+                        <button type="button" class="mbti-btn" data-value="INTJ">INTJ</button>
+                        <button type="button" class="mbti-btn" data-value="INTP">INTP</button>
+                        <button type="button" class="mbti-btn" data-value="ENTJ">ENTJ</button>
+                        <button type="button" class="mbti-btn" data-value="ENTP">ENTP</button>
+                        <button type="button" class="mbti-btn" data-value="INFJ">INFJ</button>
+                        <button type="button" class="mbti-btn" data-value="INFP">INFP</button>
+                        <button type="button" class="mbti-btn" data-value="ENFJ">ENFJ</button>
+                        <button type="button" class="mbti-btn active" data-value="ENFP">ENFP</button>
+                        <button type="button" class="mbti-btn" data-value="ISTJ">ISTJ</button>
+                        <button type="button" class="mbti-btn" data-value="ISFJ">ISFJ</button>
+                        <button type="button" class="mbti-btn" data-value="ESTJ">ESTJ</button>
+                        <button type="button" class="mbti-btn" data-value="ESFJ">ESFJ</button>
+                        <button type="button" class="mbti-btn" data-value="ISTP">ISTP</button>
+                        <button type="button" class="mbti-btn" data-value="ISFP">ISFP</button>
+                        <button type="button" class="mbti-btn" data-value="ESTP">ESTP</button>
+                        <button type="button" class="mbti-btn" data-value="ESFP">ESFP</button>
+                    </div>
+                    <button type="button" class="mbti-skip-btn">跳過 / 不確定</button>
+                    <p class="form-hint">AI 將結合您的性格特徵提供更準確的命理建議（可選填）</p>
+                </div>
+
+                <!-- Question Section -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-question-circle gold-icon"></i>
+                        <span>您想請教的問題？</span>
+                    </div>
+                    <textarea id="question" placeholder="例如：我今年的事業運勢如何？" required></textarea>
+                    <p class="form-hint center">填寫完整資訊可獲得更深入的分析結果</p>
+                </div>
+
+                <button type="submit" id="generate-btn" class="primary-btn submit-btn">
+                    <span>開始 AI 算命</span>
+                    <i class="fas fa-sparkles"></i>
+                    <div class="loader" id="loader" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div class="footer-decoration">
+                <div class="line"></div>
+                <div class="star-icon-bg"><i class="fas fa-star-half-alt"></i></div>
+                <div class="line"></div>
+            </div>
+        </section>
+
+        <!-- Report Section (Hidden by default) -->
+        <section id="report-section">
+            <header class="main-header report-header">
+                <button class="icon-btn back-to-input"><i class="fas fa-chevron-left"></i></button>
+                <h1>AI 算命報告分析</h1>
+                <button class="icon-btn help-btn">?</button>
+            </header>
+            <!-- Same structure as before, just kept hidden -->
+            <main class="report-content" id="report-container">
+                <!-- 1. 八字分析 (Radar + Grid + Text) -->
+                <div class="card chart-card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-pie gold-icon"></i>
+                        <span>五行分佈比例圖</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card bazi-card">
+                    <div class="card-title">
+                        <i class="fas fa-th-large gold-icon"></i>
+                        <span>八字命盤</span>
+                    </div>
+                    <div class="bazi-grid">
+                        <div class="bazi-column"><span class="column-label">年柱</span>
+                            <div class="bazi-box stem" id="year-stem">--</div>
+                            <div class="bazi-box branch" id="year-branch">--</div>
+                        </div>
+                        <div class="bazi-column"><span class="column-label">月柱</span>
+                            <div class="bazi-box stem" id="month-stem">--</div>
+                            <div class="bazi-box branch" id="month-branch">--</div>
+                        </div>
+                        <div class="bazi-column"><span class="column-label">日柱</span>
+                            <div class="bazi-box stem" id="day-stem">--</div>
+                            <div class="bazi-box branch" id="day-branch">--</div>
+                        </div>
+                        <div class="bazi-column"><span class="column-label">時柱</span>
+                            <div class="bazi-box stem" id="hour-stem">--</div>
+                            <div class="bazi-box branch" id="hour-branch">--</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card analysis-card synthesis-card gold-border">
+                    <div class="card-title synthesis-title">
+                        <span>1. 八字分析</span>
+                        <div class="ai-icon-bg"><i class="fas fa-brain"></i></div>
+                    </div>
+                    <div class="card-body" id="bazi-analysis-content">
+                        <!-- Will be populated with sub-sections -->
+                    </div>
+                </div>
+
+                <!-- 2. 事業運勢 -->
+                <div class="card analysis-card">
+                    <div class="card-title">
+                        <i class="fas fa-briefcase gold-icon"></i>
+                        <span>2. 事業運勢</span>
+                    </div>
+                    <div class="card-body" id="career-analysis-content">--</div>
+                </div>
+
+                <!-- 3. 感情生活 -->
+                <div class="card analysis-card">
+                    <div class="card-title">
+                        <i class="fas fa-heart gold-icon"></i>
+                        <span>3. 感情生活</span>
+                    </div>
+                    <div class="card-body" id="love-analysis-content">--</div>
+                </div>
+
+                <!-- 4. 財運預測 -->
+                <div class="card analysis-card">
+                    <div class="card-title">
+                        <i class="fas fa-wallet gold-icon"></i>
+                        <span>4. 財運預測</span>
+                    </div>
+                    <div class="card-body" id="wealth-analysis-content">--</div>
+                </div>
+
+                <!-- 5. 2026 運氣提升指南 -->
+                <div class="card list-card">
+                    <div class="card-title">
+                        <i class="fas fa-sparkles gold-icon"></i>
+                        <span>5. 2026 運氣提升指南</span>
+                    </div>
+                    <div class="card-body" id="luck-guide-content">
+                        <ul class="guidance-list" id="guidance-list"></ul>
+                    </div>
+                </div>
+
+                <!-- 6. 三個月內大事預言 -->
+                <div class="card info-card">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-alt gold-icon"></i>
+                        <span>6. 三個月內大事預言</span>
+                    </div>
+                    <div class="card-body" id="event-text">--</div>
+                </div>
+
+                <!-- 7. 人生轉折點 -->
+                <div class="card info-card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-line gold-icon"></i>
+                        <span>7. 人生轉折點</span>
+                    </div>
+                    <div class="card-body" id="turning-point-text">--</div>
+                </div>
+
+                <!-- 8. 專屬疑惑解答 -->
+                <div class="card info-card highlight-card">
+                    <div class="card-title">
+                        <i class="fas fa-comments gold-icon"></i>
+                        <span>8. 專屬疑惑解答</span>
+                    </div>
+                    <div class="card-body" id="answer-text">--</div>
+                </div>
+
+                <!-- 9. 大師寄語 -->
+                <div class="card info-card quote-card">
+                    <div class="card-title">
+                        <i class="fas fa-scroll gold-icon"></i>
+                        <span>9. 大師寄語</span>
+                    </div>
+                    <div class="card-body italic" id="master-message">--</div>
+                </div>
+
+                <footer class="final-footer">
+                    <div class="footer-divider">
+                        <i class="fas fa-sun gold-icon"></i>
+                    </div>
+                    <p class="footer-quote">FATE IS WRITTEN IN THE STARS, DRIVEN BY THE MIND.</p>
+                </footer>
+
+                <div class="sticky-footer">
+                    <button class="footer-btn share-btn primary-gold">
+                        <i class="fas fa-share-alt"></i> 分享算命報告
+                    </button>
+                </div>
+            </main>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
