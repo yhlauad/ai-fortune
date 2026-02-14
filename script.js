@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate-btn');
     const loader = document.getElementById('loader');
     const mbtiBtns = document.querySelectorAll('.mbti-btn');
+    const loadingModal = document.getElementById('loading-modal');
 
     // Webhook URL
     const WEBHOOK_URL = 'https://n8n-1306.zeabur.app/webhook/sinaihk-fortune';
@@ -27,13 +28,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const year = document.getElementById('birth-year').value;
         const month = document.getElementById('birth-month').value;
         const day = document.getElementById('birth-day').value;
-        const hour = document.getElementById('birth-hour').value || '未知';
-        const minute = document.getElementById('birth-minute').value || '未知';
-        const unknownTime = document.getElementById('unknown-time').checked;
+        const hour = document.getElementById('birth-hour').value || '00';
+        const minute = document.getElementById('birth-minute').value || '00';
         const question = document.getElementById('question').value;
 
         // Format: YYYY-MM-DD-HH-MM
         const birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-${hour.padStart(2, '0')}-${minute.padStart(2, '0')}`;
+
+        // Show loading state and Modal
+        generateBtn.disabled = true;
+        loader.style.display = 'inline-block';
+        generateBtn.querySelector('span').textContent = '報告生成中...';
+        loadingModal.classList.add('active');
+
+        // Modal Step Animation simulation
+        const dots = loadingModal.querySelectorAll('.step-dot');
+        let currentDot = 0;
+        const dotInterval = setInterval(() => {
+            dots.forEach(d => d.classList.remove('active'));
+            currentDot = (currentDot + 1) % dots.length;
+            dots[currentDot].classList.add('active');
+        }, 3000);
 
         const payload = [{
             birth: birthStr,
@@ -52,21 +67,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Network response was not ok');
 
             const result = await response.json();
-            // result could be an array [{...}] or just {...}
             const data = Array.isArray(result) ? result[0] : result;
 
             console.log('Received data:', data);
+
+            // Hide modal before transition
+            loadingModal.classList.remove('active');
+            clearInterval(dotInterval);
+
+            // Populate Report data
+            populateReport(data);
 
             // Switch view
             inputSection.classList.remove('active');
             reportSection.classList.add('active');
             window.scrollTo(0, 0);
 
-            // Populate Report data
-            populateReport(data);
-
         } catch (error) {
             console.error('Error:', error);
+            loadingModal.classList.remove('active');
+            clearInterval(dotInterval);
             alert('系統繁忙，或伺服器無回應。請稍後再試。');
         } finally {
             generateBtn.disabled = false;
