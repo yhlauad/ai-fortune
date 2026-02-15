@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmTimeBtn = document.getElementById('confirm-time');
     const dateDisplay = document.getElementById('date-display');
     const timeDisplay = document.getElementById('time-display');
-
     const syncWheelsToInputs = (modalId) => {
         const modal = document.getElementById(modalId);
         const pickers = modal.querySelectorAll('.wheel-picker');
@@ -158,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hours
     const hours = [];
     for (let i = 0; i <= 23; i++) hours.push({ value: i < 10 ? '0' + i : i, label: (i < 10 ? '0' + i : i) + '時' });
-    initWheelPicker('hour-wheel', hours, '12');
+    initWheelPicker('hour-wheel', hours, '00');
 
     // Minutes
     const minutes = [];

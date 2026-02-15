@@ -65,7 +65,7 @@
                         <span>出生時間</span>
                     </div>
                     <div class="datetime-summary-box" id="open-time-picker">
-                        <div class="summary-text" id="time-display">12時00分</div>
+                        <div class="summary-text" id="time-display">00時00分</div>
                         <i class="fas fa-chevron-right"></i>
                     </div>
                     <div class="checkbox-group">
@@ -82,7 +82,7 @@
                 <input type="hidden" id="birth-year" value="1990">
                 <input type="hidden" id="birth-month" value="1">
                 <input type="hidden" id="birth-day" value="1">
-                <input type="hidden" id="birth-hour" value="12">
+                <input type="hidden" id="birth-hour" value="00">
                 <input type="hidden" id="birth-minute" value="00">
 
                 <!-- MBTI Section -->
@@ -148,6 +148,9 @@
         <!-- Report Section (Hidden by default) -->
         <section id="report-section">
             <header class="main-header report-header">
+                <button class="icon-btn back-to-input">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
                 <h1>AI 算命報告分析</h1>
             </header>
 
@@ -307,19 +310,24 @@
     <div id="date-picker-modal" class="modal-overlay">
         <div class="modal-content picker-content">
             <h3 class="modal-title">選擇出生日期</h3>
-
             <div class="wheel-picker-group">
                 <div class="wheel-picker-container">
-                    <div class="wheel-picker" id="year-wheel" data-type="year">
-                        <div class="wheel-scroll"></div>
+                    <div class="wheel-col">
+                        <div class="wheel-picker" id="year-wheel" data-type="year">
+                            <div class="wheel-scroll"></div>
+                        </div>
                         <div class="wheel-highlight"></div>
                     </div>
-                    <div class="wheel-picker" id="month-wheel" data-type="month">
-                        <div class="wheel-scroll"></div>
+                    <div class="wheel-col">
+                        <div class="wheel-picker" id="month-wheel" data-type="month">
+                            <div class="wheel-scroll"></div>
+                        </div>
                         <div class="wheel-highlight"></div>
                     </div>
-                    <div class="wheel-picker" id="day-wheel" data-type="day">
-                        <div class="wheel-scroll"></div>
+                    <div class="wheel-col">
+                        <div class="wheel-picker" id="day-wheel" data-type="day">
+                            <div class="wheel-scroll"></div>
+                        </div>
                         <div class="wheel-highlight"></div>
                     </div>
                 </div>
@@ -333,15 +341,18 @@
     <div id="time-picker-modal" class="modal-overlay">
         <div class="modal-content picker-content">
             <h3 class="modal-title">選擇出生時間</h3>
-
             <div class="wheel-picker-group">
                 <div class="wheel-picker-container">
-                    <div class="wheel-picker" id="hour-wheel" data-type="hour">
-                        <div class="wheel-scroll"></div>
+                    <div class="wheel-col">
+                        <div class="wheel-picker" id="hour-wheel" data-type="hour">
+                            <div class="wheel-scroll"></div>
+                        </div>
                         <div class="wheel-highlight"></div>
                     </div>
-                    <div class="wheel-picker" id="minute-wheel" data-type="minute">
-                        <div class="wheel-scroll"></div>
+                    <div class="wheel-col">
+                        <div class="wheel-picker" id="minute-wheel" data-type="minute">
+                            <div class="wheel-scroll"></div>
+                        </div>
                         <div class="wheel-highlight"></div>
                     </div>
                 </div>
