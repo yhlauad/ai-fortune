@@ -170,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const WEBHOOK_URL = 'https://n8n-1306.zeabur.app/webhook/sinaihk-fortune';
 
     let selectedMBTI = 'ENFP'; // Default from UI
+    let currentThreadsText = ''; // Store specialized sharing text
 
     // MBTI Selection
     mbtiBtns.forEach(btn => {
@@ -196,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
     closeShareBtn?.addEventListener('click', () => shareModal.classList.remove('active'));
 
     const getShareText = () => {
-        const masterMsg = document.getElementById('master-message')?.innerText || '';
-        const promoText = `\n\n🏮 大師特別批算：\n\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n\n⛩️ 立即指點迷津：[你的 App 連結]`;
+        const masterMsg = currentThreadsText || document.getElementById('master-message')?.innerText || '';
+        const promoText = `\n🏮 大師特別批算：\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n⛩️ 立即指點迷津：[你的 App 連結]`;
         return masterMsg + promoText;
     };
 
@@ -361,6 +362,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const masterEl = document.getElementById('master-message');
         if (masterEl && data["master-text"]) {
             masterEl.innerHTML = formatText(data["master-text"]);
+        }
+
+        // Store specialized threads sharing text if available
+        if (data["threads-text"]) {
+            currentThreadsText = data["threads-text"];
+        } else {
+            currentThreadsText = ''; // Reset if not provided
         }
     }
 
