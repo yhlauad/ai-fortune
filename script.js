@@ -45,8 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = picker.querySelectorAll('.wheel-item');
             const index = Array.from(items).findIndex(item => item.dataset.value == value);
             if (index !== -1) {
-                picker.scrollTop = index * 30;
+                setTimeout(() => {
+                    picker.scrollTo({
+                        top: index * 30,
+                        behavior: 'auto'
+                    });
+                    // Force update active status after scroll
+                    if (picker.updateActive) picker.updateActive();
+                }, 100);
             }
+
+
+
         });
     };
 
@@ -126,10 +136,65 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // Expose updateActive for external calls (like syncWheelsToInputs)
+        picker.updateActive = updateActive;
+
         picker.addEventListener('scroll', () => {
+
             clearTimeout(picker.scrollTimeout);
             picker.scrollTimeout = setTimeout(updateActive, 50);
         });
+
+        // --- Desktop Support: Mouse Drag and Wheel ---
+        let isDown = false;
+        let startY;
+        let scrollTop;
+
+        picker.addEventListener('mousedown', (e) => {
+            isDown = true;
+            picker.classList.add('dragging');
+            startY = e.pageY - picker.offsetTop;
+            scrollTop = picker.scrollTop;
+            picker.style.scrollSnapType = 'none'; // Disable snapping while dragging
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (!isDown) return;
+            isDown = false;
+            picker.classList.remove('dragging');
+            picker.style.scrollSnapType = 'y mandatory'; // Re-enable snapping
+
+            // Trigger snap-to-item
+            const index = Math.round(picker.scrollTop / 30);
+            picker.scrollTo({
+                top: index * 30,
+                behavior: 'smooth'
+            });
+            setTimeout(updateActive, 150);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const y = e.pageY - picker.offsetTop;
+            const walk = (y - startY) * 1.5; // Scroll speed
+            picker.scrollTop = scrollTop - walk;
+        });
+
+        // Explicit wheel support if needed (though native scroll works, this ensures focus)
+        picker.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            picker.scrollTop += e.deltaY;
+            clearTimeout(picker.scrollTimeout);
+            picker.scrollTimeout = setTimeout(() => {
+                const index = Math.round(picker.scrollTop / 30);
+                picker.scrollTo({
+                    top: index * 30,
+                    behavior: 'smooth'
+                });
+                updateActive();
+            }, 150);
+        }, { passive: false });
 
         // Set default
         const defaultIndex = options.findIndex(o => o.value == defaultValue);
@@ -138,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(updateActive, 100);
         }
     };
+
 
     // Years (1900 to 2050)
     const years = [];
@@ -198,14 +264,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getShareText = () => {
         const masterMsg = currentThreadsText || document.getElementById('master-message')?.innerText || '';
-        const promoText = `\n🏮 大師特別批算：\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n⛩️ 立即指點迷津：[你的 App 連結]`;
+        const promoText = `\n🏮 大仙特別批算：\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n⛩️ 立即指點迷津：[你的 App 連結]`;
         return masterMsg + promoText;
     };
 
     copyLinkBtn?.addEventListener('click', () => {
         const fullText = getShareText();
         navigator.clipboard.writeText(fullText).then(() => {
-            alert('大師寄語已複製到剪貼簿！');
+            alert('大仙寄語已複製到剪貼簿！');
             shareModal.classList.remove('active');
         });
     });

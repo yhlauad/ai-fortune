@@ -359,8 +359,18 @@ body {
 }
 
 .wheel-item {
-    cursor: pointer;
+    cursor: grab;
+    user-select: none;
 }
+
+.wheel-picker.dragging {
+    cursor: grabbing;
+}
+
+.wheel-picker.dragging .wheel-item {
+    cursor: grabbing;
+}
+
 
 .input-row {
     display: flex;
@@ -726,11 +736,15 @@ textarea {
 }
 
 .loading-gif {
-    width: 120px;
+    width: 200px;
+    max-width: 100%;
     height: auto;
+    max-height: 300px;
     margin: 0 auto 1.5rem;
     display: block;
+    object-fit: contain;
 }
+
 
 
 .modal-title {
