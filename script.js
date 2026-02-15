@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Switch view
             inputSection.classList.remove('active');
             reportSection.classList.add('active');
+            document.body.classList.add('is-report');
             window.scrollTo(0, 0);
 
         } catch (error) {
@@ -443,5 +444,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.back-to-input')?.addEventListener('click', () => {
         reportSection.classList.remove('active');
         inputSection.classList.add('active');
+        document.body.classList.remove('is-report');
     });
 });
