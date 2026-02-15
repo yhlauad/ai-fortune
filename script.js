@@ -389,16 +389,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function populateReport(data) {
         // 五行分佈比例圖 removed from UI as per request
 
-        // Bazi Chart (Demo values)
-        const baziBoxes = {
-            'year-stem': '乙', 'year-branch': '亥',
-            'month-stem': '己', 'month-branch': '卯',
-            'day-stem': '壬', 'day-branch': '辰',
-            'hour-stem': '丁', 'hour-branch': '未'
+        // Bazi Chart (Dynamic values from response)
+        const baziData = {
+            'year': data["bazi-year"],
+            'month': data["bazi-month"],
+            'day': data["bazi-day"],
+            'hour': data["bazi-hour"]
         };
-        Object.entries(baziBoxes).forEach(([id, val]) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = val;
+
+        Object.entries(baziData).forEach(([pillar, val]) => {
+            if (val && val.length >= 2) {
+                const stemEl = document.getElementById(`${pillar}-stem`);
+                const branchEl = document.getElementById(`${pillar}-branch`);
+                if (stemEl) stemEl.textContent = val[0];
+                if (branchEl) branchEl.textContent = val[1];
+            }
         });
 
         // Simple Markdown formatter
