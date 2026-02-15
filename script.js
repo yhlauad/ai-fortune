@@ -6,19 +6,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     const mbtiBtns = document.querySelectorAll('.mbti-btn');
     const loadingModal = document.getElementById('loading-modal');
+    const mbtiUnknown = document.getElementById('mbti-unknown');
+    const mbtiGrid = document.getElementById('mbti-grid');
+    const shareModal = document.getElementById('share-modal');
+    const shareBtn = document.querySelector('.share-btn');
+    const closeShareBtn = document.querySelector('.close-modal-btn');
+    const shareThreadsBtn = document.getElementById('share-threads');
+    const copyLinkBtn = document.getElementById('copy-link');
 
     // Webhook URL
     const WEBHOOK_URL = 'https://n8n-1306.zeabur.app/webhook/sinaihk-fortune';
 
     let selectedMBTI = 'ENFP'; // Default from UI
-    let radarChartInstance = null;
 
     // MBTI Selection
     mbtiBtns.forEach(btn => {
         btn.addEventListener('click', () => {
+            if (mbtiUnknown.checked) return;
             mbtiBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             selectedMBTI = btn.getAttribute('data-value');
+        });
+    });
+
+    mbtiUnknown.addEventListener('change', () => {
+        if (mbtiUnknown.checked) {
+            mbtiGrid.style.opacity = '0.4';
+            mbtiGrid.style.pointerEvents = 'none';
+        } else {
+            mbtiGrid.style.opacity = '1';
+            mbtiGrid.style.pointerEvents = 'auto';
+        }
+    });
+
+    // Share Functionality
+    shareBtn?.addEventListener('click', () => shareModal.classList.add('active'));
+    closeShareBtn?.addEventListener('click', () => shareModal.classList.remove('active'));
+
+    const getShareText = () => {
+        const masterMsg = document.getElementById('master-message')?.innerText || '';
+        const promoText = `\n\n準到發毛！【AI 黃大仙】唔單止識講大師寄語，連我 2026 年嘅八字大運都睇穿晒。🔮\n想知自己係咪今年轉運？入嚟搵大師傾下：\n👉 [你的 App 下載/連結]`;
+        return masterMsg + promoText;
+    };
+
+    copyLinkBtn?.addEventListener('click', () => {
+        const fullText = getShareText();
+        navigator.clipboard.writeText(fullText).then(() => {
+            alert('大師寄語及推廣文字已複製到剪貼簿！');
+            shareModal.classList.remove('active');
+        });
+    });
+
+    shareThreadsBtn?.addEventListener('click', () => {
+        const fullText = getShareText();
+        const url = `https://www.threads.net/intent/post?text=${encodeURIComponent(fullText)}`;
+        window.open(url, '_blank');
+        shareModal.classList.remove('active');
+    });
+
+    // Navigation highlighting
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.card[id]');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (window.pageYOffset >= sectionTop - 150) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('href').slice(1) === current) {
+                item.classList.add('active');
+            }
         });
     });
 
@@ -31,9 +94,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const hour = document.getElementById('birth-hour').value || '00';
         const minute = document.getElementById('birth-minute').value || '00';
         const question = document.getElementById('question').value;
+        const unknownTime = document.getElementById('unknown-time').checked;
+        const mbtiUnknownVal = mbtiUnknown.checked;
 
-        // Format: YYYY-MM-DD-HH-MM
-        const birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-${hour.padStart(2, '0')}-${minute.padStart(2, '0')}`;
+        // Format: YYYY-MM-DD-HH-MM (HH-MM is XX-XX if unknown)
+        let birthStr;
+        if (unknownTime) {
+            birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-XX-XX`;
+        } else {
+            birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-${hour.padStart(2, '0')}-${minute.padStart(2, '0')}`;
+        }
 
         // Show loading state and Modal
         generateBtn.disabled = true;
@@ -52,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const payload = [{
             birth: birthStr,
-            mbti: selectedMBTI.toLowerCase(),
+            mbti: mbtiUnknownVal ? "unknown" : selectedMBTI.toLowerCase(),
             question: question
         }];
 
@@ -96,20 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function populateReport(data) {
-        // Radar Chart Fallback - try to extract from analysis content if not provided as fields
-        const radarSource = data["bazi-analysis-content"] || "";
-        const extractPercent = (key) => {
-            const match = radarSource.match(new RegExp(`${key}：(\\d+)%`));
-            return match ? parseInt(match[1]) : (data[key] ? parseInt(data[key]) : 20);
-        };
-        const fiveElements = {
-            wood: extractPercent("木"),
-            fire: extractPercent("火"),
-            water: extractPercent("水"),
-            earth: extractPercent("土"),
-            metal: extractPercent("金")
-        };
-        initRadarChart(fiveElements);
+        // 五行分佈比例圖 removed from UI as per request
 
         // Bazi Chart (Demo values)
         const baziBoxes = {
@@ -154,59 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function initRadarChart(fiveElements) {
-        const ctx = document.getElementById('radarChart')?.getContext('2d');
-        if (!ctx) return;
-
-        if (radarChartInstance) {
-            radarChartInstance.destroy();
-        }
-
-        radarChartInstance = new Chart(ctx, {
-            type: 'radar',
-            data: {
-                labels: ['木', '火', '土', '金', '水'],
-                datasets: [{
-                    label: '五行分佈',
-                    data: [
-                        fiveElements.wood,
-                        fiveElements.fire,
-                        fiveElements.earth,
-                        fiveElements.metal,
-                        fiveElements.water
-                    ],
-                    backgroundColor: 'rgba(240, 201, 77, 0.4)',
-                    borderColor: '#f0c94d',
-                    borderWidth: 3,
-                    pointBackgroundColor: '#f0c94d',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: '#f0c94d',
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    r: {
-                        angleLines: { color: 'rgba(240, 201, 77, 0.2)' },
-                        grid: { color: 'rgba(240, 201, 77, 0.2)' },
-                        pointLabels: {
-                            color: '#f0c94d',
-                            font: { size: 16, weight: '700' }
-                        },
-                        ticks: { display: false, stepSize: 20 },
-                        suggestedMin: 0,
-                        suggestedMax: 100
-                    }
-                },
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    }
 
     // Back Button
     document.querySelector('.back-to-input')?.addEventListener('click', () => {

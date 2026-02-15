@@ -22,7 +22,6 @@
             <header class="main-header">
                 <button class="icon-btn"><i class="fas fa-chevron-left"></i></button>
                 <h1>AI 命理分析</h1>
-                <button class="icon-btn help-btn">?</button>
             </header>
 
             <div class="banner-card">
@@ -122,7 +121,15 @@
                         <button type="button" class="mbti-btn" data-value="ESTP">ESTP</button>
                         <button type="button" class="mbti-btn" data-value="ESFP">ESFP</button>
                     </div>
-                    <button type="button" class="mbti-skip-btn">跳過 / 不確定</button>
+                    <div class="checkbox-group">
+                        <div class="custom-checkbox">
+                            <input type="checkbox" id="mbti-unknown">
+                            <label for="mbti-unknown">
+                                <span class="checkbox-circle"></span>
+                                不知道 MBTI / 跳過
+                            </label>
+                        </div>
+                    </div>
                     <p class="form-hint">AI 將結合您的性格特徵提供更準確的命理建議（可選填）</p>
                 </div>
 
@@ -155,20 +162,23 @@
             <header class="main-header report-header">
                 <button class="icon-btn back-to-input"><i class="fas fa-chevron-left"></i></button>
                 <h1>AI 算命報告分析</h1>
-                <button class="icon-btn help-btn">?</button>
             </header>
+
+            <nav class="report-nav">
+                <a href="#bazi-section" class="nav-item active">八字</a>
+                <a href="#career-section" class="nav-item">事業</a>
+                <a href="#love-section" class="nav-item">感情</a>
+                <a href="#wealth-section" class="nav-item">財運</a>
+                <a href="#guide-section" class="nav-item">轉運指南</a>
+                <a href="#event-section" class="nav-item">未來三個月預言</a>
+                <a href="#turning-section" class="nav-item">人生轉折</a>
+                <a href="#answer-section" class="nav-item">專屬解答</a>
+                <a href="#master-section" class="nav-item">大師寄語</a>
+            </nav>
+
             <!-- Same structure as before, just kept hidden -->
             <main class="report-content" id="report-container">
                 <!-- 1. 八字分析 (Radar + Grid + Text) -->
-                <div class="card chart-card">
-                    <div class="card-title">
-                        <i class="fas fa-chart-pie gold-icon"></i>
-                        <span>五行分佈比例圖</span>
-                    </div>
-                    <div class="chart-container">
-                        <canvas id="radarChart"></canvas>
-                    </div>
-                </div>
 
                 <div class="card bazi-card">
                     <div class="card-title">
@@ -195,7 +205,7 @@
                     </div>
                 </div>
 
-                <div class="card analysis-card synthesis-card gold-border">
+                <div class="card analysis-card synthesis-card gold-border" id="bazi-section">
                     <div class="card-title synthesis-title">
                         <span>1. 八字分析</span>
                         <div class="ai-icon-bg"><i class="fas fa-brain"></i></div>
@@ -205,8 +215,7 @@
                     </div>
                 </div>
 
-                <!-- 2. 事業運勢 -->
-                <div class="card analysis-card">
+                <div class="card analysis-card" id="career-section">
                     <div class="card-title">
                         <i class="fas fa-briefcase gold-icon"></i>
                         <span>2. 事業運勢</span>
@@ -214,8 +223,7 @@
                     <div class="card-body" id="career-analysis-content">--</div>
                 </div>
 
-                <!-- 3. 感情生活 -->
-                <div class="card analysis-card">
+                <div class="card analysis-card" id="love-section">
                     <div class="card-title">
                         <i class="fas fa-heart gold-icon"></i>
                         <span>3. 感情生活</span>
@@ -223,8 +231,7 @@
                     <div class="card-body" id="love-analysis-content">--</div>
                 </div>
 
-                <!-- 4. 財運預測 -->
-                <div class="card analysis-card">
+                <div class="card analysis-card" id="wealth-section">
                     <div class="card-title">
                         <i class="fas fa-wallet gold-icon"></i>
                         <span>4. 財運預測</span>
@@ -233,7 +240,7 @@
                 </div>
 
                 <!-- 5. 2026 運氣提升指南 -->
-                <div class="card list-card">
+                <div class="card list-card" id="guide-section">
                     <div class="card-title">
                         <i class="fas fa-sparkles gold-icon"></i>
                         <span>5. 2026 運氣提升指南</span>
@@ -244,7 +251,7 @@
                 </div>
 
                 <!-- 6. 三個月內大事預言 -->
-                <div class="card info-card">
+                <div class="card info-card" id="event-section">
                     <div class="card-title">
                         <i class="fas fa-calendar-alt gold-icon"></i>
                         <span>6. 三個月內大事預言</span>
@@ -253,7 +260,7 @@
                 </div>
 
                 <!-- 7. 人生轉折點 -->
-                <div class="card info-card">
+                <div class="card info-card" id="turning-section">
                     <div class="card-title">
                         <i class="fas fa-chart-line gold-icon"></i>
                         <span>7. 人生轉折點</span>
@@ -262,7 +269,7 @@
                 </div>
 
                 <!-- 8. 專屬疑惑解答 -->
-                <div class="card info-card highlight-card">
+                <div class="card info-card highlight-card" id="answer-section">
                     <div class="card-title">
                         <i class="fas fa-comments gold-icon"></i>
                         <span>8. 專屬疑惑解答</span>
@@ -271,7 +278,7 @@
                 </div>
 
                 <!-- 9. 大師寄語 -->
-                <div class="card info-card quote-card">
+                <div class="card info-card quote-card" id="master-section">
                     <div class="card-title">
                         <i class="fas fa-scroll gold-icon"></i>
                         <span>9. 大師寄語</span>
@@ -306,6 +313,24 @@
                 <span class="step-dot"></span>
                 <span class="step-dot"></span>
             </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal-overlay">
+        <div class="modal-content share-content">
+            <h3 class="modal-title">分享算命報告</h3>
+            <div class="share-options">
+                <button class="share-option-btn" id="share-threads">
+                    <i class="fab fa-threads"></i>
+                    <span>分享到 Threads</span>
+                </button>
+                <button class="share-option-btn" id="copy-link">
+                    <i class="fas fa-copy"></i>
+                    <span>複製大師寄語</span>
+                </button>
+            </div>
+            <button class="primary-btn close-modal-btn">取消</button>
         </div>
     </div>
 
