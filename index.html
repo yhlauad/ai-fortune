@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#F9F5F0">
     <title>AI 命理分析 - AI Fortune</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,71 +21,52 @@
         <!-- Input Section -->
         <section id="input-section" class="active">
             <header class="main-header">
-                <button class="icon-btn"><i class="fas fa-chevron-left"></i></button>
                 <h1>AI 命理分析</h1>
             </header>
 
             <div class="banner-card">
                 <div class="banner-content">
                     <span class="banner-label">EMPOWERED BY AI</span>
-                    <h2 class="banner-title">解鎖命運之鑰</h2>
+                    <h2 class="banner-title">AI 黃大仙</h2>
                 </div>
                 <div class="banner-cloud"></div>
             </div>
 
             <form id="fortune-form" class="main-form">
-                <!-- Date of Birth -->
+                <!-- Gender Selection -->
+                <div class="form-section">
+                    <div class="section-title">
+                        <i class="fas fa-venus-mars gold-icon"></i>
+                        <span>性別</span>
+                    </div>
+                    <div class="gender-selector">
+                        <button type="button" class="gender-btn active" data-value="male">男</button>
+                        <button type="button" class="gender-btn" data-value="female">女</button>
+                    </div>
+                    <input type="hidden" id="gender" value="male">
+                </div>
+
+                <!-- Birth Date Card -->
                 <div class="form-section">
                     <div class="section-title">
                         <i class="fas fa-calendar-alt gold-icon"></i>
                         <span>出生日期</span>
                     </div>
-                    <div class="input-row">
-                        <div class="input-col">
-                            <label>年份</label>
-                            <input type="number" id="birth-year" placeholder="1995" required>
-                        </div>
-                        <div class="input-col">
-                            <label>月份</label>
-                            <div class="select-wrapper">
-                                <select id="birth-month" required>
-                                    <option value="1">一月</option>
-                                    <option value="2">二月</option>
-                                    <option value="3">三月</option>
-                                    <option value="4">四月</option>
-                                    <option value="5">五月</option>
-                                    <option value="6">六月</option>
-                                    <option value="7">七月</option>
-                                    <option value="8">八月</option>
-                                    <option value="9">九月</option>
-                                    <option value="10">十月</option>
-                                    <option value="11">十一月</option>
-                                    <option value="12">十二月</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="input-col">
-                            <label>日期</label>
-                            <input type="number" id="birth-day" placeholder="01" required>
-                        </div>
+                    <div class="datetime-summary-box" id="open-date-picker">
+                        <div class="summary-text" id="date-display">1990年1月1日</div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
 
-                <!-- Time of Birth -->
+                <!-- Birth Time Card -->
                 <div class="form-section">
                     <div class="section-title">
                         <i class="fas fa-clock gold-icon"></i>
                         <span>出生時間</span>
                     </div>
-                    <div class="input-row">
-                        <div class="input-col">
-                            <label>小時</label>
-                            <input type="number" id="birth-hour" placeholder="14" max="23">
-                        </div>
-                        <div class="input-col">
-                            <label>分鐘</label>
-                            <input type="number" id="birth-minute" placeholder="30" max="59">
-                        </div>
+                    <div class="datetime-summary-box" id="open-time-picker">
+                        <div class="summary-text" id="time-display">12時00分</div>
+                        <i class="fas fa-chevron-right"></i>
                     </div>
                     <div class="checkbox-group">
                         <div class="custom-checkbox">
@@ -96,6 +78,12 @@
                         </div>
                     </div>
                 </div>
+
+                <input type="hidden" id="birth-year" value="1990">
+                <input type="hidden" id="birth-month" value="1">
+                <input type="hidden" id="birth-day" value="1">
+                <input type="hidden" id="birth-hour" value="12">
+                <input type="hidden" id="birth-minute" value="00">
 
                 <!-- MBTI Section -->
                 <div class="form-section">
@@ -160,7 +148,6 @@
         <!-- Report Section (Hidden by default) -->
         <section id="report-section">
             <header class="main-header report-header">
-                <button class="icon-btn back-to-input"><i class="fas fa-chevron-left"></i></button>
                 <h1>AI 算命報告分析</h1>
             </header>
 
@@ -313,6 +300,54 @@
                 <span class="step-dot"></span>
                 <span class="step-dot"></span>
             </div>
+        </div>
+    </div>
+
+    <!-- Date Picker Modal -->
+    <div id="date-picker-modal" class="modal-overlay">
+        <div class="modal-content picker-content">
+            <h3 class="modal-title">選擇出生日期</h3>
+
+            <div class="wheel-picker-group">
+                <div class="wheel-picker-container">
+                    <div class="wheel-picker" id="year-wheel" data-type="year">
+                        <div class="wheel-scroll"></div>
+                        <div class="wheel-highlight"></div>
+                    </div>
+                    <div class="wheel-picker" id="month-wheel" data-type="month">
+                        <div class="wheel-scroll"></div>
+                        <div class="wheel-highlight"></div>
+                    </div>
+                    <div class="wheel-picker" id="day-wheel" data-type="day">
+                        <div class="wheel-scroll"></div>
+                        <div class="wheel-highlight"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="primary-btn submit-btn" id="confirm-date">確認選擇</button>
+        </div>
+    </div>
+
+    <!-- Time Picker Modal -->
+    <div id="time-picker-modal" class="modal-overlay">
+        <div class="modal-content picker-content">
+            <h3 class="modal-title">選擇出生時間</h3>
+
+            <div class="wheel-picker-group">
+                <div class="wheel-picker-container">
+                    <div class="wheel-picker" id="hour-wheel" data-type="hour">
+                        <div class="wheel-scroll"></div>
+                        <div class="wheel-highlight"></div>
+                    </div>
+                    <div class="wheel-picker" id="minute-wheel" data-type="minute">
+                        <div class="wheel-scroll"></div>
+                        <div class="wheel-highlight"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="primary-btn submit-btn" id="confirm-time">確認選擇</button>
         </div>
     </div>
 

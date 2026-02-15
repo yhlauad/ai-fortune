@@ -14,6 +14,159 @@ document.addEventListener('DOMContentLoaded', () => {
     const shareThreadsBtn = document.getElementById('share-threads');
     const copyLinkBtn = document.getElementById('copy-link');
 
+    // Gender Selection Logic
+    const genderBtns = document.querySelectorAll('.gender-btn');
+    const genderInput = document.getElementById('gender');
+
+    genderBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            genderBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            genderInput.value = btn.dataset.value;
+        });
+    });
+
+    // Date & Time Picker Modal Elements
+    const datePickerModal = document.getElementById('date-picker-modal');
+    const timePickerModal = document.getElementById('time-picker-modal');
+    const openDatePicker = document.getElementById('open-date-picker');
+    const openTimePicker = document.getElementById('open-time-picker');
+    const confirmDateBtn = document.getElementById('confirm-date');
+    const confirmTimeBtn = document.getElementById('confirm-time');
+    const dateDisplay = document.getElementById('date-display');
+    const timeDisplay = document.getElementById('time-display');
+
+    const syncWheelsToInputs = (modalId) => {
+        const modal = document.getElementById(modalId);
+        const pickers = modal.querySelectorAll('.wheel-picker');
+        pickers.forEach(picker => {
+            const inputId = `birth-${picker.dataset.type}`;
+            const targetInput = document.getElementById(inputId);
+            const value = targetInput.value;
+            const items = picker.querySelectorAll('.wheel-item');
+            const index = Array.from(items).findIndex(item => item.dataset.value == value);
+            if (index !== -1) {
+                picker.scrollTop = index * 30;
+            }
+        });
+    };
+
+    openDatePicker.addEventListener('click', () => {
+        datePickerModal.classList.add('active');
+        syncWheelsToInputs('date-picker-modal');
+    });
+
+    openTimePicker.addEventListener('click', () => {
+        timePickerModal.classList.add('active');
+        syncWheelsToInputs('time-picker-modal');
+    });
+
+    confirmDateBtn.addEventListener('click', () => {
+        datePickerModal.classList.remove('active');
+        updateSummaryDisplay();
+    });
+
+    confirmTimeBtn.addEventListener('click', () => {
+        timePickerModal.classList.remove('active');
+        updateSummaryDisplay();
+    });
+
+    const updateSummaryDisplay = () => {
+        const year = document.getElementById('birth-year').value;
+        const month = document.getElementById('birth-month').value;
+        const day = document.getElementById('birth-day').value;
+        const hour = document.getElementById('birth-hour').value;
+        const minute = document.getElementById('birth-minute').value;
+
+        if (dateDisplay) dateDisplay.textContent = `${year}年${month}月${day}日`;
+        if (timeDisplay) timeDisplay.textContent = `${hour}時${minute}分`;
+    };
+
+    // Wheel Picker Logic
+    const initWheelPicker = (id, options, defaultValue) => {
+        const picker = document.getElementById(id);
+        const scroll = picker.querySelector('.wheel-scroll');
+        const hiddenInput = document.getElementById(picker.getAttribute('id').replace('-wheel', 'birth-').replace('birth-', picker.dataset.type === 'year' || picker.dataset.type === 'month' || picker.dataset.type === 'day' ? 'birth-' : 'birth-'));
+        // Note: The ID mapping in HTML was slightly inconsistent, let's just target directly or fix it.
+        // Actually I used birth-year, birth-month, birth-day, birth-hour, birth-minute.
+        const inputId = `birth-${picker.dataset.type}`;
+        const targetInput = document.getElementById(inputId);
+
+        options.forEach(opt => {
+            const item = document.createElement('div');
+            item.className = 'wheel-item';
+            item.dataset.value = opt.value;
+            item.textContent = opt.label;
+            scroll.appendChild(item);
+        });
+
+        const items = picker.querySelectorAll('.wheel-item');
+
+        const updateActive = () => {
+            const rect = picker.getBoundingClientRect();
+            const centerY = rect.top + rect.height / 2;
+
+            let closestItem = null;
+            let minDistance = Infinity;
+
+            items.forEach(item => {
+                const itemRect = item.getBoundingClientRect();
+                const itemCenterY = itemRect.top + itemRect.height / 2;
+                const distance = Math.abs(centerY - itemCenterY);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestItem = item;
+                }
+            });
+
+            if (closestItem) {
+                items.forEach(i => i.classList.remove('active'));
+                closestItem.classList.add('active');
+                targetInput.value = closestItem.dataset.value;
+            }
+        };
+
+        picker.addEventListener('scroll', () => {
+            clearTimeout(picker.scrollTimeout);
+            picker.scrollTimeout = setTimeout(updateActive, 50);
+        });
+
+        // Set default
+        const defaultIndex = options.findIndex(o => o.value == defaultValue);
+        if (defaultIndex !== -1) {
+            picker.scrollTop = defaultIndex * 30;
+            setTimeout(updateActive, 100);
+        }
+    };
+
+    // Years (1900 to 2050)
+    const years = [];
+    for (let i = 1900; i <= 2050; i++) years.push({ value: i, label: i + '年' });
+    initWheelPicker('year-wheel', years, 1990);
+
+    // Months
+    const months = [];
+    for (let i = 1; i <= 12; i++) months.push({ value: i, label: i + '月' });
+    initWheelPicker('month-wheel', months, 1);
+
+    // Days
+    const days = [];
+    for (let i = 1; i <= 31; i++) days.push({ value: i, label: i + '日' });
+    initWheelPicker('day-wheel', days, 1);
+
+    // Hours
+    const hours = [];
+    for (let i = 0; i <= 23; i++) hours.push({ value: i < 10 ? '0' + i : i, label: (i < 10 ? '0' + i : i) + '時' });
+    initWheelPicker('hour-wheel', hours, '12');
+
+    // Minutes
+    const minutes = [];
+    for (let i = 0; i <= 59; i++) minutes.push({ value: i < 10 ? '0' + i : i, label: (i < 10 ? '0' + i : i) + '分' });
+    initWheelPicker('minute-wheel', minutes, '00');
+
+    updateSummaryDisplay();
+
     // Webhook URL
     const WEBHOOK_URL = 'https://n8n-1306.zeabur.app/webhook/sinaihk-fortune';
 
@@ -45,14 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getShareText = () => {
         const masterMsg = document.getElementById('master-message')?.innerText || '';
-        const promoText = `\n\n準到發毛！【AI 黃大仙】唔單止識講大師寄語，連我 2026 年嘅八字大運都睇穿晒。🔮\n想知自己係咪今年轉運？入嚟搵大師傾下：\n👉 [你的 App 下載/連結]`;
+        const promoText = `\n\n🏮 大師特別批算：\n\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n\n⛩️ 立即指點迷津：[你的 App 連結]`;
         return masterMsg + promoText;
     };
 
     copyLinkBtn?.addEventListener('click', () => {
         const fullText = getShareText();
         navigator.clipboard.writeText(fullText).then(() => {
-            alert('大師寄語及推廣文字已複製到剪貼簿！');
+            alert('大師寄語已複製到剪貼簿！');
             shareModal.classList.remove('active');
         });
     });
@@ -122,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const payload = [{
             birth: birthStr,
+            gender: genderInput.value,
             mbti: mbtiUnknownVal ? "unknown" : selectedMBTI.toLowerCase(),
             question: question
         }];
