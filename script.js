@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const getShareText = () => {
         const masterMsg = currentThreadsText || document.getElementById('master-message')?.innerText || '';
-        const promoText = `\n🏮 大仙特別批算：\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n⛩️ 立即指點迷津：[你的 App 連結]`;
+        const promoText = `\n🏮 大仙特別批算：\n唔好盲摸摸！【AI 黃大仙】結合MBTI同八字，幫你搵埋2026 邊個係你嘅最強 Back-up (貴人)。\n⛩️ 立即指點迷津：https://sinaihk-ai-fortune.zeabur.app/`;
         return masterMsg + promoText;
     };
 
