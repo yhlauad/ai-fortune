@@ -313,16 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const hour = document.getElementById('birth-hour').value || '00';
         const minute = document.getElementById('birth-minute').value || '00';
         const question = document.getElementById('question').value;
-        const unknownTime = document.getElementById('unknown-time').checked;
         const mbtiUnknownVal = mbtiUnknown.checked;
 
-        // Format: YYYY-MM-DD-HH-MM (HH-MM is XX-XX if unknown)
-        let birthStr;
-        if (unknownTime) {
-            birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-XX-XX`;
-        } else {
-            birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-${hour.padStart(2, '0')}-${minute.padStart(2, '0')}`;
-        }
+        // Format: YYYY-MM-DD-HH-MM
+        const birthStr = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}-${hour.padStart(2, '0')}-${minute.padStart(2, '0')}`;
 
         // Show loading state and Modal
         generateBtn.disabled = true;

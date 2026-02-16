@@ -1067,3 +1067,66 @@ textarea {
     left: 0;
     color: var(--gold-primary);
 }
+
+/* Mobile Responsiveness Fixes */
+@media (max-width: 480px) {
+    .main-form {
+        padding: 0 0.8rem;
+    }
+
+    .form-section {
+        padding: 1.2rem 0.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .banner-card {
+        margin: 0 0.8rem 1.5rem 0.8rem;
+        height: 140px;
+        padding: 1rem;
+    }
+
+    .banner-title {
+        font-size: 1.4rem;
+    }
+
+    .mbti-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.35rem;
+    }
+
+    .mbti-btn {
+        padding: 0.7rem 0;
+        font-size: 0.7rem;
+        border-radius: 8px;
+    }
+
+    .section-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .gold-icon {
+        font-size: 1rem;
+    }
+
+    textarea {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+        height: 120px;
+        line-height: 1.5;
+    }
+
+    .form-hint {
+        font-size: 0.65rem;
+        padding: 0;
+        line-height: 1.4;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1.1rem;
+        font-size: 1.1rem;
+        margin-top: 1rem;
+        border-radius: 16px;
+    }
+}
