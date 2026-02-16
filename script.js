@@ -13,6 +13,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeShareBtn = document.querySelector('.close-modal-btn');
     const shareThreadsBtn = document.getElementById('share-threads');
     const copyLinkBtn = document.getElementById('copy-link');
+    const socialModal = document.getElementById('social-modal');
+    const closeSocialBtn = document.getElementById('close-social-modal');
+
+    // Close Social Modal
+    closeSocialBtn?.addEventListener('click', () => {
+        socialModal.classList.remove('active');
+    });
 
     // Gender Selection Logic
     const genderBtns = document.querySelectorAll('.gender-btn');
