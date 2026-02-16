@@ -707,16 +707,21 @@ textarea {
     height: 100%;
     background: rgba(44, 24, 16, 0.4);
     backdrop-filter: blur(8px);
-    display: none;
-    /* Controlled by JS */
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2000;
     padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
 .modal-overlay.active {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
 }
 
 .modal-content {

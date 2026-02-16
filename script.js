@@ -45,18 +45,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = picker.querySelectorAll('.wheel-item');
             const index = Array.from(items).findIndex(item => item.dataset.value == value);
             if (index !== -1) {
-                setTimeout(() => {
-                    picker.scrollTo({
-                        top: index * 30,
-                        behavior: 'auto'
-                    });
-                    // Force update active status after scroll
+                const scrollPos = index * 30;
+                // Force scroll immediately
+                picker.scrollTop = scrollPos;
+                // Also use requestAnimationFrame for after render
+                requestAnimationFrame(() => {
+                    picker.scrollTop = scrollPos;
                     if (picker.updateActive) picker.updateActive();
-                }, 100);
+                });
             }
-
-
-
         });
     };
 
@@ -208,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Years (1900 to 2050)
     const years = [];
     for (let i = 1900; i <= 2050; i++) years.push({ value: i, label: i + '年' });
-    initWheelPicker('year-wheel', years, 1990);
+    initWheelPicker('year-wheel', years, 2026);
 
     // Months
     const months = [];
@@ -376,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             generateBtn.disabled = false;
             loader.style.display = 'none';
-            generateBtn.querySelector('span').textContent = '開始 AI 算命';
+            generateBtn.querySelector('span').textContent = '請大仙指點迷津';
         }
     });
 
